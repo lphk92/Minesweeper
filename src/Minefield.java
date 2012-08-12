@@ -43,14 +43,14 @@ public class Minefield
                 {
                     int num = 0;
 
-                    num += i-1 >= 0 && j-1 >= 0 ? (field[i-1][j-1] == Minefield.MINE ? 1 : 0) : 0;
-                    num += i+1 < width && j-1 >= 0 ? (field[i+1][j-1] == Minefield.MINE ? 1 : 0) : 0;
-                    num += i-1 >= 0 && j+1 < height ? (field[i-1][j+1] == Minefield.MINE ? 1 : 0) : 0;
-                    num += i+1 < width && j+1 < height ? (field[i+1][j+1] == Minefield.MINE ? 1 : 0) : 0;
-                    num += j-1 >= 0 ? (field[i][j-1] == Minefield.MINE ? 1 : 0) : 0;
-                    num += j+1 < height ? (field[i][j+1] == Minefield.MINE ? 1 : 0) : 0;
-                    num += i-1 >= 0 ? (field[i-1][j] == Minefield.MINE ? 1 : 0) : 0;
-                    num += i+1 < width ? (field[i+1][j] == Minefield.MINE ? 1 : 0) : 0;
+                    num += (i-1 >= 0 && j-1 >= 0) ? (field[i-1][j-1] == Minefield.MINE ? 1 : 0) : 0;
+                    num += (i+1 < width && j-1 >= 0) ? (field[i+1][j-1] == Minefield.MINE ? 1 : 0) : 0;
+                    num += (i-1 >= 0 && j+1 < height) ? (field[i-1][j+1] == Minefield.MINE ? 1 : 0) : 0;
+                    num += (i+1 < width && j+1 < height) ? (field[i+1][j+1] == Minefield.MINE ? 1 : 0) : 0;
+                    num += (j-1 >= 0) ? (field[i][j-1] == Minefield.MINE ? 1 : 0) : 0;
+                    num += (j+1 < height) ? (field[i][j+1] == Minefield.MINE ? 1 : 0) : 0;
+                    num += (i-1 >= 0) ? (field[i-1][j] == Minefield.MINE ? 1 : 0) : 0;
+                    num += (i+1 < width) ? (field[i+1][j] == Minefield.MINE ? 1 : 0) : 0;
 
                     field[i][j] = num;
                 }

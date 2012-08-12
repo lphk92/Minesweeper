@@ -1,14 +1,18 @@
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
 
 public class EventCoordinator
 {
-    private MinefieldPanel minefield;
+    private Minefield minefield;
+    private MinefieldPanel minefieldPanel;
     private MinefieldMenubar menubar;
 
-    public EventCoordinator(MinefieldPanel minefield, MinefieldMenubar menubar)
+    public EventCoordinator(Minefield minefield, MinefieldPanel minefieldPanel, MinefieldMenubar menubar)
     {
         this.minefield = minefield;
+        this.minefieldPanel = minefieldPanel;
         this.menubar = menubar;
 
         this.menubar.addNewGameListener(new NewGameListener());
@@ -20,7 +24,17 @@ public class EventCoordinator
         public void actionPerformed(ActionEvent ae)
         {
             System.out.println("New Game");
-            EventCoordinator.this.minefield.initialize(new Minefield());
+
+            int width = EventCoordinator.this.minefield.getWidth();
+            int height = EventCoordinator.this.minefield.getHeight();
+            int mines = EventCoordinator.this.minefield.getMines();
+
+            Minefield newMinefield = NewGameDialog.newGame(width, height, mines);
+            if (newMinefield != null)
+            {
+                EventCoordinator.this.minefield = newMinefield;
+                EventCoordinator.this.minefieldPanel.initialize(EventCoordinator.this.minefield);
+            }
         }
     }
 
@@ -29,7 +43,7 @@ public class EventCoordinator
         public void actionPerformed(ActionEvent ae)
         {
             System.out.println("Reset");
-            EventCoordinator.this.minefield.initialize();
+            EventCoordinator.this.minefieldPanel.reinitialize();
         }
     }
 /*

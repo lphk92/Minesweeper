@@ -11,7 +11,7 @@ public class Main
         MinefieldPanel panel = new MinefieldPanel(minefield);
         MinefieldMenubar menubar = new MinefieldMenubar();
 
-        EventCoordinator coordinator = new EventCoordinator(panel, menubar);
+        EventCoordinator coordinator = new EventCoordinator(minefield, panel, menubar);
 
         JFrame frame = new JFrame("Minesweeper");
         frame.setJMenuBar(menubar);

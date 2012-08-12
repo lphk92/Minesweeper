@@ -15,12 +15,11 @@ public class MinefieldPanel extends JPanel implements ActionListener
     public MinefieldPanel(Minefield minefield)
     {
         this.minefield = minefield;
-        this.field = new Mine[this.minefield.getWidth()][this.minefield.getHeight()];
         this.clickCount = 0;
         this.initComponent();
     }
 
-    public void initialize()
+    public void reinitialize()
     {
         this.initialize(this.minefield);
     }
@@ -29,21 +28,18 @@ public class MinefieldPanel extends JPanel implements ActionListener
     {
         this.clickCount = 0;
         this.minefield = minefield;
-        for (int i = 0 ; i < this.minefield.getWidth() ; i++)
-        {
-            for (int j = 0 ; j < this.minefield.getHeight() ; j++)
-            {
-                field[i][j].setValue(this.minefield.getValue(i, j));
-                field[i][j].setEnabled(true);
-                field[i][j].hideValue();
-            }
-        }
+        this.initComponent();
     }
 
     private void initComponent()
     {
+        this.removeAll();
+        this.updateUI();
+
         this.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         this.setLayout(new GridLayout(this.minefield.getWidth(), this.minefield.getHeight()));
+
+        this.field = new Mine[this.minefield.getWidth()][this.minefield.getHeight()];
 
         for (int i = 0 ; i < this.minefield.getWidth() ; i++)
         {
@@ -61,45 +57,55 @@ public class MinefieldPanel extends JPanel implements ActionListener
     {
         Mine source = (Mine)ae.getSource();
 
-        source.showValue();
-
-        this.clickCount++;
-        if (source.isMine())
+        if (!source.isFlagged())
         {
-            source.setBackground(Color.RED);
-            for (int i = 0 ; i < field.length ; i++)
+            source.showValue();
+            this.clickCount++;
+            System.out.println("clickCount = " + this.clickCount);
+
+            if (source.isMine())
             {
-                for (int j = 0 ; j < field[0].length ; j++)
+                source.setBackground(Color.RED);
+                for (int i = 0 ; i < field.length ; i++)
                 {
-                    field[i][j].setEnabled(false);
-                    if (field[i][j].isMine())
+                    for (int j = 0 ; j < field[0].length ; j++)
                     {
-                        field[i][j].setBackground(Color.RED);
-                        field[i][j].showValue();
+                        field[i][j].setEnabled(false);
+                        if (field[i][j].isMine())
+                        {
+                            field[i][j].setBackground(Color.RED);
+                            field[i][j].showValue();
+                        }
                     }
                 }
             }
-        }
-        else if (this.clickCount == (this.minefield.getWidth() * this.minefield.getHeight() - this.minefield.getMines()))
-        {
-            for (int i = 0 ; i < field.length ; i++)
+            else if (this.clickCount == (this.minefield.getWidth() * this.minefield.getHeight() - this.minefield.getMines()))
             {
-                for (int j = 0 ; j < field[0].length ; j++)
+                for (int i = 0 ; i < field.length ; i++)
                 {
-                    field[i][j].setEnabled(false);
-                    field[i][j].showValue();
+                    for (int j = 0 ; j < field[0].length ; j++)
+                    {
+                        field[i][j].setEnabled(false);
+                        field[i][j].showValue();
 
-                    if (!field[i][j].isMine())
-                        field[i][j].setBackground(Color.GREEN);
+                        if (!field[i][j].isMine())
+                            field[i][j].setBackground(Color.GREEN);
+                    }
                 }
             }
-        }
-        else
-        {
-            source.setBackground(Color.GRAY);
-        }
+            else
+            {
+                source.setBackground(Color.GRAY);
+                if (source.isAlone())
+                {
+                    //TODO: Clear out neighbors when an empty space is clicked
+                    System.out.println("Empty space clicked");                                
+                }
+            }
 
-        this.revalidate();
-        this.repaint();
+            this.revalidate();
+            this.repaint();
+        }
     }
 }
+
