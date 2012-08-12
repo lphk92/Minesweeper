@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class Mine extends JButton implements ActionListener
+public class Mine extends JButton
 {
     private static final String MINE = "!!";
     public String value;
@@ -14,7 +14,6 @@ public class Mine extends JButton implements ActionListener
         super();
         
         this.setValue(value);
-        this.addActionListener(this);
 
         this.initComponent();
     }
@@ -56,12 +55,5 @@ public class Mine extends JButton implements ActionListener
     {
         this.setBackground(Color.BLACK);
         this.setForeground(Color.WHITE);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent ae)
-    {
-        this.setBackground(Color.GRAY);
-        this.showValue();
     }
 }

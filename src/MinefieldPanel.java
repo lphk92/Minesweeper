@@ -61,33 +61,45 @@ public class MinefieldPanel extends JPanel implements ActionListener
     {
         Mine source = (Mine)ae.getSource();
 
+        source.showValue();
+
         this.clickCount++;
         if (source.isMine())
         {
+            source.setBackground(Color.RED);
             for (int i = 0 ; i < field.length ; i++)
             {
                 for (int j = 0 ; j < field[0].length ; j++)
                 {
                     field[i][j].setEnabled(false);
-                    field[i][j].setBackground(Color.RED);
                     if (field[i][j].isMine())
                     {
+                        field[i][j].setBackground(Color.RED);
                         field[i][j].showValue();
                     }
                 }
             }
         }
-
-        if (this.clickCount == (this.minefield.getWidth() * this.minefield.getHeight() - this.minefield.getMines()))
+        else if (this.clickCount == (this.minefield.getWidth() * this.minefield.getHeight() - this.minefield.getMines()))
         {
             for (int i = 0 ; i < field.length ; i++)
             {
                 for (int j = 0 ; j < field[0].length ; j++)
                 {
                     field[i][j].setEnabled(false);
-                    field[i][j].setBackground(Color.GREEN);
+                    field[i][j].showValue();
+
+                    if (!field[i][j].isMine())
+                        field[i][j].setBackground(Color.GREEN);
                 }
             }
         }
+        else
+        {
+            source.setBackground(Color.GRAY);
+        }
+
+        this.revalidate();
+        this.repaint();
     }
 }
