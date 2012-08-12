@@ -10,11 +10,13 @@ public class MinefieldPanel extends JPanel implements ActionListener
 {
     private Minefield minefield;
     private Mine[][] field;
+    private int clickCount;
 
     public MinefieldPanel(Minefield minefield)
     {
         this.minefield = minefield;
         this.field = new Mine[this.minefield.getWidth()][this.minefield.getHeight()];
+        this.clickCount = 0;
         this.initComponent();
     }
 
@@ -25,6 +27,7 @@ public class MinefieldPanel extends JPanel implements ActionListener
 
     public void initialize(Minefield minefield)
     {
+        this.clickCount = 0;
         this.minefield = minefield;
         for (int i = 0 ; i < this.minefield.getWidth() ; i++)
         {
@@ -57,6 +60,8 @@ public class MinefieldPanel extends JPanel implements ActionListener
     public void actionPerformed(ActionEvent ae)
     {
         Mine source = (Mine)ae.getSource();
+
+        this.clickCount++;
         if (source.isMine())
         {
             for (int i = 0 ; i < field.length ; i++)
@@ -69,6 +74,18 @@ public class MinefieldPanel extends JPanel implements ActionListener
                     {
                         field[i][j].showValue();
                     }
+                }
+            }
+        }
+
+        if (this.clickCount == (this.minefield.getWidth() * this.minefield.getHeight() - this.minefield.getMines()))
+        {
+            for (int i = 0 ; i < field.length ; i++)
+            {
+                for (int j = 0 ; j < field[0].length ; j++)
+                {
+                    field[i][j].setEnabled(false);
+                    field[i][j].setBackground(Color.GREEN);
                 }
             }
         }

@@ -8,6 +8,7 @@ public class Mine extends JButton implements ActionListener
 {
     private static final String MINE = "!!";
     public String value;
+
     public Mine(int value)
     {
         super();

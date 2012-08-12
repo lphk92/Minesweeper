@@ -63,6 +63,11 @@ public class Minefield
         return field[x][y];
     }
 
+    public int getMines()
+    {
+        return this.mines;
+    }
+
     public int getWidth()
     {
         return field.length;
