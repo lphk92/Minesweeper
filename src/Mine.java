@@ -58,6 +58,11 @@ public class Mine extends JButton implements MouseListener
         return this.flagged;
     }
 
+    public boolean isHidden()
+    {
+        return this.hidden;
+    }
+
     public void showValue()
     {
         this.setText(this.value);

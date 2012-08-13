@@ -59,9 +59,12 @@ public class MinefieldPanel extends JPanel implements ActionListener
 
         if (!source.isFlagged())
         {
-            source.showValue();
-            this.clickCount++;
-            System.out.println("clickCount = " + this.clickCount);
+            if (source.isHidden())
+            {
+                source.showValue();
+                this.clickCount++;
+                System.out.println("clickCount = " + this.clickCount);
+            }
 
             if (source.isMine())
             {
@@ -86,7 +89,6 @@ public class MinefieldPanel extends JPanel implements ActionListener
                     for (int j = 0 ; j < field[0].length ; j++)
                     {
                         field[i][j].setEnabled(false);
-                        field[i][j].showValue();
 
                         if (!field[i][j].isMine())
                             field[i][j].setBackground(Color.GREEN);
