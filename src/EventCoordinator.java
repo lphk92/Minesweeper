@@ -46,13 +46,4 @@ public class EventCoordinator
             EventCoordinator.this.minefieldPanel.reinitialize();
         }
     }
-/*
-    private class NewGameListener implements ActionListener
-    {
-        public void actionPerformed(ActionEvent ae)
-        {
-
-        }
-    }
-*/
 }
