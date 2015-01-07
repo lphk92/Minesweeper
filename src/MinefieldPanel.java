@@ -10,12 +10,10 @@ public class MinefieldPanel extends JPanel implements ActionListener
 {
     private Minefield minefield;
     private Mine[][] field;
-    private int clickCount;
 
     public MinefieldPanel(Minefield minefield)
     {
         this.minefield = minefield;
-        this.clickCount = 0;
         this.initComponent();
     }
 
@@ -26,7 +24,6 @@ public class MinefieldPanel extends JPanel implements ActionListener
 
     public void initialize(Minefield minefield)
     {
-        this.clickCount = 0;
         this.minefield = minefield;
         this.initComponent();
     }
@@ -45,7 +42,7 @@ public class MinefieldPanel extends JPanel implements ActionListener
         {
             for (int j = 0 ; j < this.minefield.getHeight() ; j++)
             {
-                field[i][j] = new Mine(this.minefield.getValue(i, j));
+                field[i][j] = new Mine(i, j, this.minefield.getValue(i, j));
                 field[i][j].addActionListener(this);
                 this.add(field[i][j]);
             }
@@ -62,8 +59,7 @@ public class MinefieldPanel extends JPanel implements ActionListener
             if (source.isHidden())
             {
                 source.showValue();
-                this.clickCount++;
-                System.out.println("clickCount = " + this.clickCount);
+                this.minefield.setExposed(source.getFieldX(), source.getFieldY());
             }
 
             if (source.isMine())
@@ -82,7 +78,7 @@ public class MinefieldPanel extends JPanel implements ActionListener
                     }
                 }
             }
-            else if (this.clickCount == (this.minefield.getWidth() * this.minefield.getHeight() - this.minefield.getMines()))
+            else if (this.minefield.getExposedCount() == (this.minefield.getWidth() * this.minefield.getHeight() - this.minefield.getMines()))
             {
                 for (int i = 0 ; i < field.length ; i++)
                 {

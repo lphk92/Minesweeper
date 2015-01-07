@@ -9,16 +9,24 @@ public class Mine extends JButton implements MouseListener
     private static final String MINE = "!!";
     private static final String FLAG = "FF";
     private static final String ALONE = "";
+    private static final String ADD = "+";
+    private static final String REMOVE = "-";
+    private static final String SCRAMBLE = "!$?";
+
     private String value;
     private boolean hidden;
     private boolean flagged;
+    private int fieldX;
+    private int fieldY;
 
-    public Mine(int value)
+    public Mine(int x, int y, int value)
     {
         super();
         
         this.flagged = false;
         this.hidden = true;
+        this.fieldX = x;
+        this.fieldY = y;
 
         this.setValue(value);
         this.addMouseListener(this);
@@ -32,6 +40,18 @@ public class Mine extends JButton implements MouseListener
         {
             case Minefield.MINE : 
                 this.value = Mine.MINE;
+                break;
+
+            case Minefield.POWERUP_ADD:
+                this.value = Mine.ADD;
+                break;
+
+            case Minefield.POWERUP_REMOVE:
+                this.value = Mine.REMOVE;
+                break;
+
+            case Minefield.POWERUP_SCRAMBLE:
+                this.value = Mine.SCRAMBLE;
                 break;
 
             case 0 : 
@@ -61,6 +81,16 @@ public class Mine extends JButton implements MouseListener
     public boolean isHidden()
     {
         return this.hidden;
+    }
+
+    public int getFieldX()
+    {
+        return this.fieldX;
+    }
+
+    public int getFieldY()
+    {
+        return this.fieldY;
     }
 
     public void showValue()
