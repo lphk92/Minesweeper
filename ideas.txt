@@ -1,5 +1,5 @@
-- Click on something and it scrambles the mines
-- Add/remove mines from the minefield (Power up, Decreaser)
+x Click on something and it scrambles the mines
+x Add/remove mines from the minefield (Power up, Decreaser)
 - Potentially make it a bigger board if necessary
 - Put the mines in a specific pattern (face, picture, etc..)
 - Reveal some of the other tiles

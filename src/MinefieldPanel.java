@@ -161,6 +161,34 @@ public class MinefieldPanel extends JPanel implements ActionListener
                     else if (value == Minefield.POWERUP_SCRAMBLE)
                     {
                         System.out.println("POWERUP - Scramble");
+
+                        // Remove all unflagged mines
+                        int mineCount = 0;
+                        for (int i = 0 ; i < this.minefield.getWidth() ; i++)
+                        {
+                            for (int j = 0 ; j < this.minefield.getHeight() ; j++)
+                            {
+                                if (field[i][j].isMine() && !field[i][j].isFlagged())
+                                {
+                                    this.minefield.setValue(i, j, Minefield.BLANK);
+                                    mineCount++;
+                                }
+                            }
+                        }
+
+                        while (mineCount > 0)
+                        {
+                            Random rand = new Random();
+                            int x = rand.nextInt(this.minefield.getWidth());
+                            int y = rand.nextInt(this.minefield.getHeight());
+                            if (field[x][y].isHidden() && this.minefield.getValue(x, y) >= 0)
+                            {
+                                field[x][y].setValue(Minefield.MINE);
+                                this.minefield.setValue(x, y, Minefield.MINE);
+                                refreshMines();
+                                mineCount--;
+                            }
+                        }
                     }
                 }
 

@@ -53,7 +53,8 @@ public class Minefield
             int num = rand.nextInt(2);
             if (this.field[x][y] == 0)
             {
-               this.field[x][y] = num % 2 == 0 ? Minefield.POWERUP_ADD : Minefield.POWERUP_REMOVE;
+               //this.field[x][y] = num % 2 == 0 ? Minefield.POWERUP_ADD : Minefield.POWERUP_REMOVE;
+               this.field[x][y] = Minefield.POWERUP_SCRAMBLE;
             }
             else
             {
