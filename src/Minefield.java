@@ -7,7 +7,9 @@ public class Minefield
     public static final int POWERUP_REMOVE = -3;
     public static final int POWERUP_SCRAMBLE = -4;
 
+
     private int[][] field;
+    private int[][] initialField;
     private boolean[][] exposed;
     private int mines;
     private int exposedCount;
@@ -42,20 +44,45 @@ public class Minefield
         }
 
         // Add powerups
-        // TODO
+        for (int i = 0 ; i < 3 ; i++)
+        {
+            int x = rand.nextInt(width);
+            int y = rand.nextInt(height);
+
+            if (this.field[x][y] == 0)
+            {
+               this.field[x][y] = Minefield.POWERUP_ADD;
+            }
+            else
+            {
+               i--;
+            }
+        }
 
         // Initialize the rest of the minefield with approriate numbers
         refreshBoard();
+
+        // Save initial board for resetting
+        initialField = field.clone();
+        for (int i = 0 ; i < field.length ; i++)
+        {
+            initialField[i] = field[i].clone();
+        }
     }
 
     public void reset()
     {
-        this.exposedCount = 0;
+        field = initialField.clone();
+        for (int i = 0 ; i < initialField.length ; i++)
+        {
+            field[i] = initialField[i].clone();
+        }
+        exposedCount = 0;
         for (int i = 0 ; i < this.getWidth() ; i++)
         {
             for (int j = 0 ; j < this.getWidth() ; j++)
             {
-                this.exposed[i][j] = false;
+                exposed[i][j] = false;
             }
         }
     }
@@ -85,6 +112,11 @@ public class Minefield
         return exposedCount;
     }
 
+    public boolean isExposed(int x, int y)
+    {
+        return exposed[x][y];
+    }
+
     public void setValue(int x, int y, int value)
     {
         field[x][y] = value;
@@ -93,8 +125,11 @@ public class Minefield
 
     public void setExposed(int x, int y)
     {
+        if (!exposed[x][y])
+        {
+            exposedCount++;
+        }
         exposed[x][y] = true;
-        exposedCount++;
     }
 
     public void printField()

@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import java.util.Random;
 
 public class MinefieldPanel extends JPanel implements ActionListener
 {
@@ -25,6 +26,7 @@ public class MinefieldPanel extends JPanel implements ActionListener
     public void initialize(Minefield minefield)
     {
         this.minefield = minefield;
+        this.minefield.reset();
         this.initComponent();
     }
 
@@ -45,6 +47,10 @@ public class MinefieldPanel extends JPanel implements ActionListener
                 field[i][j] = new Mine(i, j, this.minefield.getValue(i, j));
                 field[i][j].addActionListener(this);
                 this.add(field[i][j]);
+                if (this.minefield.isExposed(i, j))
+                {
+                    field[i][j].showValue();
+                }
             }
         }
     }
@@ -59,50 +65,82 @@ public class MinefieldPanel extends JPanel implements ActionListener
             if (source.isHidden())
             {
                 source.showValue();
+                source.setBackground(Color.GRAY);
                 this.minefield.setExposed(source.getFieldX(), source.getFieldY());
-            }
 
-            if (source.isMine())
-            {
-                source.setBackground(Color.RED);
-                for (int i = 0 ; i < field.length ; i++)
+                if (source.isMine())
                 {
-                    for (int j = 0 ; j < field[0].length ; j++)
+                    source.setBackground(Color.RED);
+                    for (int i = 0 ; i < field.length ; i++)
                     {
-                        field[i][j].setEnabled(false);
-                        if (field[i][j].isMine())
+                        for (int j = 0 ; j < field[0].length ; j++)
                         {
-                            field[i][j].setBackground(Color.RED);
-                            field[i][j].showValue();
+                            field[i][j].setEnabled(false);
+                            if (field[i][j].isMine())
+                            {
+                                field[i][j].setBackground(Color.RED);
+                                field[i][j].showValue();
+                            }
+                            else if (this.minefield.getValue(i, j) < 0)
+                            {
+                                field[i][j].setBackground(Color.BLUE);
+                                field[i][j].showValue();
+                            }
                         }
                     }
                 }
-            }
-            else if (this.minefield.getExposedCount() == (this.minefield.getWidth() * this.minefield.getHeight() - this.minefield.getMines()))
-            {
-                for (int i = 0 ; i < field.length ; i++)
+                else if (this.minefield.getExposedCount() == (this.minefield.getWidth() * this.minefield.getHeight() - this.minefield.getMines()))
                 {
-                    for (int j = 0 ; j < field[0].length ; j++)
+                    for (int i = 0 ; i < field.length ; i++)
                     {
-                        field[i][j].setEnabled(false);
+                        for (int j = 0 ; j < field[0].length ; j++)
+                        {
+                            field[i][j].setEnabled(false);
 
-                        if (!field[i][j].isMine())
-                            field[i][j].setBackground(Color.GREEN);
+                            if (!field[i][j].isMine())
+                                field[i][j].setBackground(Color.GREEN);
+                        }
                     }
                 }
-            }
-            else
-            {
-                source.setBackground(Color.GRAY);
-                if (source.isAlone())
+                else
                 {
-                    //TODO: Clear out neighbors when an empty space is clicked
-                    System.out.println("Empty space clicked");                                
+                    int value = this.minefield.getValue(source.getFieldX(), source.getFieldY());
+                    if (source.isAlone())
+                    {
+                        //TODO: Clear out neighbors when an empty space is clicked
+                        System.out.println("Empty space clicked");
+                    }
+                    else if (value == Minefield.POWERUP_ADD)
+                    {
+                        System.out.println("POWERUP - Add");
+                        while (true)
+                        {
+                            Random rand = new Random();
+                            int x = rand.nextInt(this.minefield.getWidth());
+                            int y = rand.nextInt(this.minefield.getHeight());
+                            if (field[x][y].isHidden() && this.minefield.getValue(x, y) >= 0)
+                            {
+                                field[x][y].setValue(Minefield.MINE);
+                                this.minefield.setValue(x, y, Minefield.MINE);
+                                System.out.println("    Mine added at " + x + ", " + y);
+                                this.minefield.printField();
+                                break;
+                            }
+                        }
+                    }
+                    else if (value == Minefield.POWERUP_REMOVE)
+                    {
+                        System.out.println("POWERUP - Remove");
+                    }
+                    else if (value == Minefield.POWERUP_SCRAMBLE)
+                    {
+                        System.out.println("POWERUP - Scramble");
+                    }
                 }
-            }
 
-            this.revalidate();
-            this.repaint();
+                this.revalidate();
+                this.repaint();
+            }
         }
     }
 }
