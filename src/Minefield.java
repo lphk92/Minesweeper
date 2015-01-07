@@ -2,6 +2,7 @@ import java.util.Random;
 
 public class Minefield
 {
+    public static final int BLANK = 0;
     public static final int MINE = -1;
     public static final int POWERUP_ADD = -2;
     public static final int POWERUP_REMOVE = -3;
@@ -49,9 +50,10 @@ public class Minefield
             int x = rand.nextInt(width);
             int y = rand.nextInt(height);
 
+            int num = rand.nextInt(2);
             if (this.field[x][y] == 0)
             {
-               this.field[x][y] = Minefield.POWERUP_ADD;
+               this.field[x][y] = num % 2 == 0 ? Minefield.POWERUP_ADD : Minefield.POWERUP_REMOVE;
             }
             else
             {

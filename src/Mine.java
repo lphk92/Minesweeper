@@ -96,6 +96,14 @@ public class Mine extends JButton implements MouseListener
     public void showValue()
     {
         this.setText(this.value);
+        if (this.value.equals(Mine.MINE))
+        {
+            this.setBackground(Color.RED);
+        }
+        else
+        {
+            this.setBackground(Color.GRAY);
+        }
         this.hidden = false;
     }
 

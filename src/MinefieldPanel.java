@@ -55,6 +55,19 @@ public class MinefieldPanel extends JPanel implements ActionListener
         }
     }
 
+    private void refreshMines()
+    {
+        for (int i = 0 ; i < this.minefield.getWidth() ; i++)
+        {
+            for (int j = 0 ; j < this.minefield.getHeight() ; j++)
+            {
+                field[i][j].setValue(this.minefield.getValue(i, j));
+                if (this.minefield.isExposed(i, j))
+                    field[i][j].showValue();
+            }
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent ae)
     {
@@ -65,7 +78,6 @@ public class MinefieldPanel extends JPanel implements ActionListener
             if (source.isHidden())
             {
                 source.showValue();
-                source.setBackground(Color.GRAY);
                 this.minefield.setExposed(source.getFieldX(), source.getFieldY());
 
                 if (source.isMine())
@@ -122,8 +134,7 @@ public class MinefieldPanel extends JPanel implements ActionListener
                             {
                                 field[x][y].setValue(Minefield.MINE);
                                 this.minefield.setValue(x, y, Minefield.MINE);
-                                System.out.println("    Mine added at " + x + ", " + y);
-                                this.minefield.printField();
+                                refreshMines();
                                 break;
                             }
                         }
@@ -131,6 +142,21 @@ public class MinefieldPanel extends JPanel implements ActionListener
                     else if (value == Minefield.POWERUP_REMOVE)
                     {
                         System.out.println("POWERUP - Remove");
+                        while (true)
+                        {
+                            Random rand = new Random();
+                            int x = rand.nextInt(this.minefield.getWidth());
+                            int y = rand.nextInt(this.minefield.getHeight());
+                            if (field[x][y].isMine())
+                            {
+                                this.minefield.setValue(x, y, Minefield.BLANK);
+                                this.minefield.setExposed(x, y);
+                                field[x][y].setValue(Minefield.BLANK);
+                                field[x][y].showValue();
+                                refreshMines();
+                                break;
+                            }
+                        }
                     }
                     else if (value == Minefield.POWERUP_SCRAMBLE)
                     {
