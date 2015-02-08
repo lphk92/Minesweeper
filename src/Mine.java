@@ -6,12 +6,13 @@ import java.awt.event.MouseEvent;
 
 public class Mine extends JButton implements MouseListener
 {
-    private static final String MINE = "!!";
-    private static final String FLAG = "FF";
-    private static final String ALONE = "";
-    private static final String ADD = "+";
-    private static final String REMOVE = "-";
-    private static final String SCRAMBLE = "!$?";
+    public static final String MINE = "!!";
+    public static final String FLAG = "FF";
+    public static final String ALONE = "";
+    public static final String ADD = "+";
+    public static final String REMOVE = "-";
+    public static final String SCRAMBLE = "!$?";
+    public static final String REVEAL = "***";
 
     private String value;
     private boolean hidden;
@@ -36,10 +37,15 @@ public class Mine extends JButton implements MouseListener
 
     public void setValue(int value)
     {
+        this.setForeground(Color.WHITE);
         switch(value)
         {
             case Minefield.MINE : 
                 this.value = Mine.MINE;
+                break;
+
+            case Minefield.POWERUP_REVEAL:
+                this.value = Mine.REVEAL;
                 break;
 
             case Minefield.POWERUP_ADD:
@@ -59,6 +65,7 @@ public class Mine extends JButton implements MouseListener
                 break;
 
             default: 
+                this.setForeground(ColorMap.getColor(value));
                 this.value = Integer.toString(value);
         }
     }

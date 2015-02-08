@@ -33,7 +33,7 @@ public class EventCoordinator
             if (newMinefield != null)
             {
                 EventCoordinator.this.minefield = newMinefield;
-                EventCoordinator.this.minefieldPanel.initialize(EventCoordinator.this.minefield);
+                EventCoordinator.this.minefieldPanel.initialize(newMinefield);
             }
         }
     }

@@ -16,7 +16,7 @@ public class Main
         JFrame frame = new JFrame("Minesweeper");
         frame.setJMenuBar(menubar);
         frame.add(panel);
-        frame.setSize(400, 400);
+        frame.setSize(600, 600);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }

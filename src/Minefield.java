@@ -7,6 +7,7 @@ public class Minefield
     public static final int POWERUP_ADD = -2;
     public static final int POWERUP_REMOVE = -3;
     public static final int POWERUP_SCRAMBLE = -4;
+    public static final int POWERUP_REVEAL = -5;
 
 
     private int[][] field;
@@ -17,7 +18,7 @@ public class Minefield
 
     public Minefield()
     {
-        this(5, 5, 5);
+        this(10, 10, 15);
     }
 
     public Minefield(int width, int height, int mines)
@@ -45,16 +46,26 @@ public class Minefield
         }
 
         // Add powerups
-        for (int i = 0 ; i < 3 ; i++)
+        int numPowerups = (int)(width * height * 0.15);
+        for (int i = 0 ; i < numPowerups ; i++)
         {
             int x = rand.nextInt(width);
             int y = rand.nextInt(height);
 
-            int num = rand.nextInt(2);
             if (this.field[x][y] == 0)
             {
-               //this.field[x][y] = num % 2 == 0 ? Minefield.POWERUP_ADD : Minefield.POWERUP_REMOVE;
-               this.field[x][y] = Minefield.POWERUP_SCRAMBLE;
+                int num = rand.nextInt(4);
+                switch(num)
+                {
+                    case 3: this.field[x][y] = Minefield.POWERUP_REVEAL;
+                            break;
+                    case 2: this.field[x][y] = Minefield.POWERUP_ADD;
+                            break;
+                    case 1: this.field[x][y] = Minefield.POWERUP_REMOVE;
+                            break;
+                    case 0: this.field[x][y] = Minefield.POWERUP_SCRAMBLE;
+                            break;
+                }
             }
             else
             {
@@ -83,9 +94,9 @@ public class Minefield
         exposedCount = 0;
         for (int i = 0 ; i < this.getWidth() ; i++)
         {
-            for (int j = 0 ; j < this.getWidth() ; j++)
+            for (int j = 0 ; j < this.getHeight() ; j++)
             {
-                exposed[i][j] = false;
+                this.exposed[i][j] = false;
             }
         }
     }
@@ -98,6 +109,27 @@ public class Minefield
     public int getMines()
     {
         return this.mines;
+    }
+
+    public int getHiddenOpenSpaces()
+    {
+        int count = 0;
+        for (int x = 0 ; x < getWidth() ; x++)
+        {
+            for (int y = 0 ; y < getHeight() ; y++)
+            {
+                if (!exposed[x][y] && field[x][y] >= 0)
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public void adjustMines(int adjust)
+    {
+        this.mines += adjust;
     }
 
     public int getWidth()
@@ -148,6 +180,34 @@ public class Minefield
         }
     }
 
+    public void floodExpose(int x, int y)
+    {
+        if (!exposed[x][y])
+        {
+            setExposed(x, y);
+            if (field[x][y] == 0)
+            {
+                for (int i = -1 ; i <= 1 ; i++)
+                {
+                    for (int j = -1; j <= 1 ; j++)
+                    {
+                        int newX = x+i;
+                        int newY = y+j;
+                        if (isValid(newX, newY) && field[newX][newY] >= 0)
+                        {
+                            floodExpose(newX, newY);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean isValid(int x, int y)
+    {
+        return x >= 0 && x < this.getWidth() && y >= 0 && y < this.getHeight();
+    }
+
     private void refreshBoard()
     {
         int width = this.getWidth();
@@ -157,10 +217,7 @@ public class Minefield
         {
             for (int j = 0 ; j < height ; j++)
             {
-                if (field[i][j] != Minefield.MINE &&
-                    field[i][j] != Minefield.POWERUP_ADD &&
-                    field[i][j] != Minefield.POWERUP_REMOVE &&
-                    field[i][j] != Minefield.POWERUP_SCRAMBLE)
+                if (field[i][j] >= 0)
                 {
                     int val = 0;
 

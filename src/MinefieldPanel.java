@@ -23,9 +23,9 @@ public class MinefieldPanel extends JPanel implements ActionListener
         this.initialize(this.minefield);
     }
 
-    public void initialize(Minefield minefield)
+    public void initialize(Minefield newMinefield)
     {
-        this.minefield = minefield;
+        this.minefield = newMinefield;
         this.minefield.reset();
         this.initComponent();
     }
@@ -78,7 +78,8 @@ public class MinefieldPanel extends JPanel implements ActionListener
             if (source.isHidden())
             {
                 source.showValue();
-                this.minefield.setExposed(source.getFieldX(), source.getFieldY());
+                this.minefield.floodExpose(source.getFieldX(), source.getFieldY());
+                refreshMines();
 
                 if (source.isMine())
                 {
@@ -125,36 +126,54 @@ public class MinefieldPanel extends JPanel implements ActionListener
                     else if (value == Minefield.POWERUP_ADD)
                     {
                         System.out.println("POWERUP - Add");
-                        while (true)
+                        if (this.minefield.getHiddenOpenSpaces() > 0)
                         {
-                            Random rand = new Random();
-                            int x = rand.nextInt(this.minefield.getWidth());
-                            int y = rand.nextInt(this.minefield.getHeight());
-                            if (field[x][y].isHidden() && this.minefield.getValue(x, y) >= 0)
+                            while (true)
                             {
-                                field[x][y].setValue(Minefield.MINE);
-                                this.minefield.setValue(x, y, Minefield.MINE);
-                                refreshMines();
-                                break;
+                                Random rand = new Random();
+                                int x = rand.nextInt(this.minefield.getWidth());
+                                int y = rand.nextInt(this.minefield.getHeight());
+                                if (field[x][y].isHidden() && this.minefield.getValue(x, y) >= 0)
+                                {
+                                    field[x][y].setValue(Minefield.MINE);
+                                    this.minefield.setValue(x, y, Minefield.MINE);
+                                    this.minefield.adjustMines(1);
+                                    refreshMines();
+                                    break;
+                                }
                             }
                         }
                     }
                     else if (value == Minefield.POWERUP_REMOVE)
                     {
                         System.out.println("POWERUP - Remove");
-                        while (true)
+
+                        int unflaggedMines = 0;
+                        for (int x = 0 ; x < this.minefield.getWidth() ; x++)
                         {
-                            Random rand = new Random();
-                            int x = rand.nextInt(this.minefield.getWidth());
-                            int y = rand.nextInt(this.minefield.getHeight());
-                            if (field[x][y].isMine())
+                            for (int y = 0 ; y < this.minefield.getWidth() ; y++)
                             {
-                                this.minefield.setValue(x, y, Minefield.BLANK);
-                                this.minefield.setExposed(x, y);
-                                field[x][y].setValue(Minefield.BLANK);
-                                field[x][y].showValue();
-                                refreshMines();
-                                break;
+                                if (field[x][y].isMine() && !field[x][y].isFlagged())
+                                {
+                                    unflaggedMines++;
+                                }
+                            }
+                        }
+                        if (unflaggedMines > 0)
+                        {
+                            while (true)
+                            {
+                                Random rand = new Random();
+                                int x = rand.nextInt(this.minefield.getWidth());
+                                int y = rand.nextInt(this.minefield.getHeight());
+                                if (field[x][y].isMine() && !field[x][y].isFlagged())
+                                {
+                                    this.minefield.setValue(x, y, Minefield.BLANK);
+                                    field[x][y].setValue(Minefield.BLANK);
+                                    this.minefield.adjustMines(-1);
+                                    refreshMines();
+                                    break;
+                                }
                             }
                         }
                     }
@@ -187,6 +206,37 @@ public class MinefieldPanel extends JPanel implements ActionListener
                                 this.minefield.setValue(x, y, Minefield.MINE);
                                 refreshMines();
                                 mineCount--;
+                            }
+                        }
+                    }
+                    else if (value == Minefield.POWERUP_REVEAL)
+                    {
+                        System.out.println("POWERUP - Reveal");
+                        int unflaggedMines = 0;
+                        for (int x = 0 ; x < this.minefield.getWidth() ; x++)
+                        {
+                            for (int y = 0 ; y < this.minefield.getHeight() ; y++)
+                            {
+                                if (field[x][y].isMine() && !field[x][y].isFlagged())
+                                {
+                                    unflaggedMines++;
+                                }
+                            }
+                        }
+                        if (unflaggedMines > 0)
+                        {
+                            while (true)
+                            {
+                                Random rand = new Random();
+                                int x = rand.nextInt(this.minefield.getWidth());
+                                int y = rand.nextInt(this.minefield.getHeight());
+                                if (field[x][y].isHidden() && this.minefield.getValue(x, y) >= 0)
+                                {
+                                    source.showValue();
+                                    this.minefield.floodExpose(x, y);
+                                    refreshMines();
+                                    break;
+                                }
                             }
                         }
                     }
