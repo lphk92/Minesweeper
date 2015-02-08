@@ -212,18 +212,7 @@ public class MinefieldPanel extends JPanel implements ActionListener
                     else if (value == Minefield.POWERUP_REVEAL)
                     {
                         System.out.println("POWERUP - Reveal");
-                        int unflaggedMines = 0;
-                        for (int x = 0 ; x < this.minefield.getWidth() ; x++)
-                        {
-                            for (int y = 0 ; y < this.minefield.getHeight() ; y++)
-                            {
-                                if (field[x][y].isMine() && !field[x][y].isFlagged())
-                                {
-                                    unflaggedMines++;
-                                }
-                            }
-                        }
-                        if (unflaggedMines > 0)
+                        if (this.minefield.getHiddenOpenSpaces() > 0)
                         {
                             while (true)
                             {
