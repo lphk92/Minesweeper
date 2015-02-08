@@ -5,9 +5,9 @@ import javax.swing.JMenuItem;
 
 public class MinefieldMenubar extends JMenuBar
 {
-    JMenu gameMenu;
-    JMenuItem newGame;
-    JMenuItem reset;
+    private JMenu gameMenu;
+    private JMenuItem newGame;
+    private JMenuItem reset;
 
     public MinefieldMenubar()
     {

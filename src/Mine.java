@@ -65,7 +65,10 @@ public class Mine extends JButton implements MouseListener
                 break;
 
             default: 
-                this.setForeground(ColorMap.getColor(value));
+                if (!this.flagged)
+                {
+                    this.setForeground(ColorMap.getColor(value));
+                }
                 this.value = Integer.toString(value);
         }
     }
@@ -136,9 +139,14 @@ public class Mine extends JButton implements MouseListener
             this.flagged = !this.flagged;
 
             if (flagged)
+            {
+                this.setForeground(Color.WHITE);
                 this.setText(Mine.FLAG);
+            }
             else
+            {
                 this.setText("");
+            }
         }
     }
 
