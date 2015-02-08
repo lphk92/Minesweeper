@@ -1,4 +1,0 @@
-x Click on something and it scrambles the mines
-x Add/remove mines from the minefield (Power up, Decreaser)
-- Put the mines in a specific pattern (face, picture, etc..)
-- Reveal some of the other tiles
